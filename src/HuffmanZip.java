@@ -1,27 +1,36 @@
+import java.io.IOException;
 import java.util.*;
 
 public class HuffmanZip {
 
-    public static Map<Character, Integer> freqMap;
+    public static Map<Byte, Integer> freqMap;
     public static Queue<HuffmanNode> minHeap;
     public static HuffmanNode root;
-    public static Map<Character, String> encodeMap;
+    public static Map<Byte, String> encodeMap;
+    public static byte[] originalBytes;
+    public static byte[] encodedBytes;
 
-    public static String encode(String source) {
-        createFreqMap(source);
+    public static void encode() throws IOException {
+        originalBytes = FileUtils.readFileToEncode();
+        createFreqMap();
         createMinHeap();
         createTree();
         createCodeMap();
-        return createEncodedString(source);
+        createEncodedBytes();
+        FileUtils.writeCompressedBytesToFile();
     }
 
-    private static String createEncodedString(String source) {
-        StringBuilder sb = new StringBuilder();
-        for (char ch : source.toCharArray()) {
-            sb.append(encodeMap.get(ch));
-        }
-        return sb.toString();
-    }
+//    public static void decode() throws IOException, ClassNotFoundException {
+//        List<Object> list = FileUtils.readFileToDecode();
+//        byte[] encodedBytes = (byte[]) list.get(0);
+//        HuffmanNode root = (HuffmanNode) list.get(1);
+//        byte[] decodedBytes = traverseTreeToDecode(encodedBytes, root);
+//    }
+
+//    private static byte[] traverseTreeToDecode(byte[] encodedBytes, HuffmanNode root) {
+//        HuffmanNode curr = root;
+//        return null;
+//    }
 
     private static void createCodeMap() {
         HuffmanNode curr = root;
@@ -32,7 +41,7 @@ public class HuffmanZip {
 
     private static void inOrderTraverse(HuffmanNode curr, StringBuilder sb) {
         if (isLeaf(curr)) {
-            encodeMap.put(curr.getCh(), sb.toString());
+            encodeMap.put(curr.getBt(), sb.toString());
             return;
         }
         inOrderTraverse(curr.getLeft(), sb.append('0'));
@@ -43,6 +52,7 @@ public class HuffmanZip {
 
 
     private static void createTree() {
+        root = null;
         while (minHeap.size() > 1) {
             HuffmanNode node1 = minHeap.poll();
             HuffmanNode node2 = minHeap.poll();
@@ -62,44 +72,45 @@ public class HuffmanZip {
                 if (o1.getFreq() != o2.getFreq()) {
                     return Integer.compare(o1.getFreq(), o2.getFreq());
                 }
-                return Character.compare(o1.getCh(), o2.getCh());
+                return Byte.compare(o1.getBt(), o2.getBt());
             }
         });
-        for (char ch : freqMap.keySet()) {
-            HuffmanNode node = new HuffmanNode(ch, freqMap.get(ch), null, null);
+        for (byte bt : freqMap.keySet()) {
+            HuffmanNode node = new HuffmanNode(bt, freqMap.get(bt), null, null);
             minHeap.offer(node);
         }
     }
 
-    private static void createFreqMap(String source) {
+    private static void createFreqMap() {
         freqMap = new HashMap<>();
-        for (char ch : source.toCharArray()) {
-            freqMap.put(ch, freqMap.getOrDefault(ch, 0) + 1);
+        for (byte bt : originalBytes) {
+            freqMap.put(bt, freqMap.getOrDefault(bt, 0) + 1);
         }
-    }
-
-    public static String decode(String encoded) {
-        StringBuilder sb = new StringBuilder();
-        HuffmanNode curr = root;
-        int idx = 0;
-        while(idx < encoded.length()) {
-            while(!isLeaf(curr)) {
-                char ch = encoded.charAt(idx);
-                if(ch == '1') {
-                    curr = curr.getRight();
-                } else if(ch == '0') {
-                    curr = curr.getLeft();
-                }
-                idx++;
-            }
-            sb.append(curr.getCh());
-            curr = root;
-        }
-        return sb.toString();
     }
 
     private static boolean isLeaf(HuffmanNode node) {
         return node.getLeft() == null && node.getRight() == null;
+    }
+
+    private static void createEncodedBytes() {
+        encodedBytes = null;
+        StringBuilder sb = new StringBuilder();
+        for(byte bt : originalBytes) {
+            sb.append(encodeMap.get(bt));
+        }
+        int byteArrLen = (sb.length() + 7) / 8;
+        byte[] bytes = new byte[byteArrLen];
+        int currentIdx = 0;
+        for(int i = 0; i < sb.length(); i += 8) {
+            String byteStr;
+            if(i + 8 > sb.length()) {
+                byteStr = sb.substring(i);
+            } else {
+                byteStr = sb.substring(i, i + 8);
+            }
+            bytes[currentIdx++] = (byte) Integer.parseInt(byteStr, 2);
+        }
+        encodedBytes = bytes;
     }
 
 }
