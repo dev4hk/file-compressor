@@ -2,23 +2,20 @@ import java.io.Serializable;
 import java.util.Objects;
 
 public class FileHeader implements Serializable {
-    private int originalStringLength;
+    private int encodedStringLength;
     private HuffmanNode root;
 
-    public FileHeader(int originalStringLength, HuffmanNode root) {
-        this.originalStringLength = originalStringLength;
+    public FileHeader(int encodedStringLength, HuffmanNode root) {
+        this.encodedStringLength = encodedStringLength;
         this.root = root;
     }
 
-    public FileHeader() {
+    public int getEncodedStringLength() {
+        return encodedStringLength;
     }
 
-    public int getOriginalStringLength() {
-        return originalStringLength;
-    }
-
-    public void setOriginalStringLength(int originalStringLength) {
-        this.originalStringLength = originalStringLength;
+    public void setEncodedStringLength(int encodedStringLength) {
+        this.encodedStringLength = encodedStringLength;
     }
 
     public HuffmanNode getRoot() {
@@ -34,11 +31,11 @@ public class FileHeader implements Serializable {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         FileHeader that = (FileHeader) o;
-        return originalStringLength == that.originalStringLength && Objects.equals(root, that.root);
+        return encodedStringLength == that.encodedStringLength && Objects.equals(root, that.root);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(originalStringLength, root);
+        return Objects.hash(encodedStringLength, root);
     }
 }
