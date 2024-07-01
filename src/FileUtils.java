@@ -12,12 +12,12 @@ public class FileUtils {
     }
 
     public void writeEncodedToFile(BitSet bitSet, FileHeader fileHeader, String destinationFilePath) throws IOException {
-        OutputStream outputStream = new FileOutputStream(destinationFilePath);
-        ObjectOutputStream objectOutputStream = new ObjectOutputStream(outputStream);
-        objectOutputStream.writeObject(bitSet);
-        objectOutputStream.writeObject(fileHeader);
-        objectOutputStream.close();
-        outputStream.close();
+        OutputStream os = new FileOutputStream(destinationFilePath);
+        ObjectOutputStream oos = new ObjectOutputStream(os);
+        oos.writeObject(bitSet);
+        oos.writeObject(fileHeader);
+        oos.close();
+        os.close();
     }
 
     public List<Object> readFileToDecode(String sourceFilePath) throws IOException, ClassNotFoundException {
@@ -73,7 +73,7 @@ public class FileUtils {
     public void getCompressionRate(String originalFilePath, String encodedFilePath) throws IOException {
         long bytesOriginal = Files.size(Path.of(originalFilePath));
         long bytesEncoded = Files.size(Path.of(encodedFilePath));
-        double compressionRate = ((bytesOriginal - bytesEncoded) /(double) bytesOriginal) * 100;
+        double compressionRate = ((bytesOriginal - bytesEncoded) / (double) bytesOriginal) * 100;
         System.out.println("========================================");
         System.out.println("Compression Rate: " + String.format("%.2f", compressionRate) + "% reduced");
         System.out.println("========================================");

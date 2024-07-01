@@ -1,8 +1,7 @@
 public enum FileType {
     ORIGINAL("ORIGINAL FILE"),
     ENCODED("ENCODED FILE"),
-    DECODED("DECODED FILE")
-    ;
+    DECODED("DECODED FILE");
 
     private final String fileType;
 

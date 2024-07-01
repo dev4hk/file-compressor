@@ -38,12 +38,11 @@ public class HuffmanService {
         int len = fileHeader.getEncodedStringLength();
         StringBuilder sb = new StringBuilder();
         int currIdx = 0;
-        while(currIdx < len) {
-            while(!isLeaf(curr)) {
-                if(set.get(currIdx)) {
+        while (currIdx < len) {
+            while (!isLeaf(curr)) {
+                if (set.get(currIdx)) {
                     curr = curr.getRight();
-                }
-                else {
+                } else {
                     curr = curr.getLeft();
                 }
                 currIdx++;
@@ -56,7 +55,7 @@ public class HuffmanService {
 
     private String createEncodedString(String originalString, Map<Character, String> encodeMap) {
         StringBuilder sb = new StringBuilder();
-        for(char ch : originalString.toCharArray()) {
+        for (char ch : originalString.toCharArray()) {
             sb.append(encodeMap.get(ch));
         }
         return sb.toString();
@@ -64,8 +63,8 @@ public class HuffmanService {
 
     private BitSet createBitSet(String encodedString) {
         BitSet bitSet = new BitSet(encodedString.length());
-        for(int i = 0; i < encodedString.length(); i++) {
-            if(encodedString.charAt(i) == '1') {
+        for (int i = 0; i < encodedString.length(); i++) {
+            if (encodedString.charAt(i) == '1') {
                 bitSet.set(i);
             }
         }
