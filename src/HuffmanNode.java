@@ -1,13 +1,13 @@
 import java.io.Serializable;
 
 public class HuffmanNode implements Serializable {
-    private byte bt;
+    private char ch;
     private int freq;
     private HuffmanNode left;
     private HuffmanNode right;
 
-    public HuffmanNode(byte bt, int freq, HuffmanNode left, HuffmanNode right) {
-        this.bt = bt;
+    public HuffmanNode(char ch, int freq, HuffmanNode left, HuffmanNode right) {
+        this.ch = ch;
         this.freq = freq;
         this.left = left;
         this.right = right;
@@ -22,12 +22,12 @@ public class HuffmanNode implements Serializable {
     public HuffmanNode() {
     }
 
-    public byte getBt() {
-        return bt;
+    public char getCh() {
+        return ch;
     }
 
-    public void setBt(byte bt) {
-        this.bt = bt;
+    public void setCh(char ch) {
+        this.ch = ch;
     }
 
     public int getFreq() {

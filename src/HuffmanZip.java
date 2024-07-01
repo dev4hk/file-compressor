@@ -3,36 +3,76 @@ import java.util.*;
 
 public class HuffmanZip {
 
-    public static Map<Byte, Integer> freqMap;
+    public static Map<Character, Integer> freqMap;
     public static Queue<HuffmanNode> minHeap;
     public static HuffmanNode root;
-    public static Map<Byte, String> encodeMap;
-    public static byte[] originalBytes;
-    public static byte[] encodedBytes;
+    public static Map<Character, String> encodeMap;
+    public static String originalString;
+    public static String encodedString;
+    public static String decodedString;
+    public static BitSet bitSet;
+    public static int len;
 
     public static void encode() throws IOException {
-        originalBytes = FileUtils.readFileToEncode();
+        originalString = FileUtils.readFileToEncode();
         createFreqMap();
         createMinHeap();
         createTree();
-        createCodeMap();
-        createEncodedBytes();
-        FileUtils.writeCompressedBytesToFile();
+        createEncodeMap();
+        createEncodedString();
+        createBitSet();
+        writeEncodedToFile();
     }
 
-//    public static void decode() throws IOException, ClassNotFoundException {
-//        List<Object> list = FileUtils.readFileToDecode();
-//        byte[] encodedBytes = (byte[]) list.get(0);
-//        HuffmanNode root = (HuffmanNode) list.get(1);
-//        byte[] decodedBytes = traverseTreeToDecode(encodedBytes, root);
-//    }
+    public static void decode() throws IOException, ClassNotFoundException {
+        List<Object> list = FileUtils.readFileToDecode();
+        BitSet set = (BitSet) list.get(0);
+        FileHeader fileHeader = (FileHeader) list.get(1);
+        createDecodedString(set, fileHeader);
+        FileUtils.writeDecodedToFile();
+    }
 
-//    private static byte[] traverseTreeToDecode(byte[] encodedBytes, HuffmanNode root) {
-//        HuffmanNode curr = root;
-//        return null;
-//    }
+    private static void createDecodedString(BitSet set, FileHeader fileHeader) {
+        HuffmanNode curr = fileHeader.getRoot();
+        int len = fileHeader.getOriginalStringLength();
+        StringBuilder sb = new StringBuilder();
+        int currIdx = 0;
+        while(currIdx < len) {
+            while(!isLeaf(curr)) {
+                if(set.get(currIdx)) {
+                    curr = curr.getRight();
+                }
+                else {
+                    curr = curr.getLeft();
+                }
+                currIdx++;
+            }
+            sb.append(curr.getCh());
+            curr = fileHeader.getRoot();
+        }
+        decodedString = sb.toString();
+    }
 
-    private static void createCodeMap() {
+    private static void createEncodedString() {
+        encodedString = null;
+        StringBuilder sb = new StringBuilder();
+        for(char ch : originalString.toCharArray()) {
+            sb.append(encodeMap.get(ch));
+        }
+        encodedString = sb.toString();
+        len = encodedString.length();
+    }
+
+    private static void createBitSet() {
+        bitSet = new BitSet(len);
+        for(int i = 0; i < encodedString.length(); i++) {
+            if(encodedString.charAt(i) == '1') {
+                bitSet.set(i);
+            }
+        }
+    }
+
+    private static void createEncodeMap() {
         HuffmanNode curr = root;
         StringBuilder sb = new StringBuilder();
         encodeMap = new HashMap<>();
@@ -41,7 +81,7 @@ public class HuffmanZip {
 
     private static void inOrderTraverse(HuffmanNode curr, StringBuilder sb) {
         if (isLeaf(curr)) {
-            encodeMap.put(curr.getBt(), sb.toString());
+            encodeMap.put(curr.getCh(), sb.toString());
             return;
         }
         inOrderTraverse(curr.getLeft(), sb.append('0'));
@@ -72,19 +112,19 @@ public class HuffmanZip {
                 if (o1.getFreq() != o2.getFreq()) {
                     return Integer.compare(o1.getFreq(), o2.getFreq());
                 }
-                return Byte.compare(o1.getBt(), o2.getBt());
+                return Character.compare(o1.getCh(), o2.getCh());
             }
         });
-        for (byte bt : freqMap.keySet()) {
-            HuffmanNode node = new HuffmanNode(bt, freqMap.get(bt), null, null);
+        for (char ch : freqMap.keySet()) {
+            HuffmanNode node = new HuffmanNode(ch, freqMap.get(ch), null, null);
             minHeap.offer(node);
         }
     }
 
     private static void createFreqMap() {
         freqMap = new HashMap<>();
-        for (byte bt : originalBytes) {
-            freqMap.put(bt, freqMap.getOrDefault(bt, 0) + 1);
+        for (char ch : originalString.toCharArray()) {
+            freqMap.put(ch, freqMap.getOrDefault(ch, 0) + 1);
         }
     }
 
@@ -92,25 +132,9 @@ public class HuffmanZip {
         return node.getLeft() == null && node.getRight() == null;
     }
 
-    private static void createEncodedBytes() {
-        encodedBytes = null;
-        StringBuilder sb = new StringBuilder();
-        for(byte bt : originalBytes) {
-            sb.append(encodeMap.get(bt));
-        }
-        int byteArrLen = (sb.length() + 7) / 8;
-        byte[] bytes = new byte[byteArrLen];
-        int currentIdx = 0;
-        for(int i = 0; i < sb.length(); i += 8) {
-            String byteStr;
-            if(i + 8 > sb.length()) {
-                byteStr = sb.substring(i);
-            } else {
-                byteStr = sb.substring(i, i + 8);
-            }
-            bytes[currentIdx++] = (byte) Integer.parseInt(byteStr, 2);
-        }
-        encodedBytes = bytes;
+    private static void writeEncodedToFile() throws IOException {
+        FileHeader fileHeader = new FileHeader(len, root);
+        FileUtils.writeEncodedToFile(fileHeader);
     }
 
 }
