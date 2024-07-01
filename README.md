@@ -1,4 +1,4 @@
-# Huffman File Compressor
+# File Compressor Using Huffman Coding Algorithm
 
 This project is to compress & decompress text files using Huffman Coding Greedy Algorithm
 
