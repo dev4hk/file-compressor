@@ -37,13 +37,45 @@ public class FileUtils {
         Files.writeString(Path.of(destinationFilePath), decodedString);
     }
 
-    public void printFileSize(String filePath) throws IOException {
+    public void printFileSize(String filePath, FileType fileType) throws IOException {
+
         long bytes = Files.size(Path.of(filePath));
+
+        System.out.println("========================================");
+        System.out.println(fileType.getFileType());
         System.out.println("Path: " + filePath);
         System.out.printf("Size: %,d bytes%n", bytes);
+        System.out.println("========================================");
     }
 
-    public void areTheSameFiles(String filePath1, String filePath2) {
+    public static void areTheSameFiles(String filePath1, String filePath2) throws IOException {
 
+        long misMatch = Files.mismatch(Path.of(filePath1), Path.of(filePath2));
+
+        if (misMatch == -1) {
+            System.out.println("========================================");
+            System.out.println("Comparing Two Files: ");
+            System.out.println("File 1: " + filePath1);
+            System.out.println("File 2: " + filePath2);
+            System.out.println("Result: No Mismatch Found");
+            System.out.println("========================================");
+        } else {
+            System.out.println("========================================");
+            System.out.println("Comparing Two Files: ");
+            System.out.println("File 1: " + filePath1);
+            System.out.println("File 2: " + filePath2);
+            System.out.println("Result: Mismatch Found");
+            System.out.println("========================================");
+        }
+
+    }
+
+    public void getCompressionRate(String originalFilePath, String encodedFilePath) throws IOException {
+        long bytesOriginal = Files.size(Path.of(originalFilePath));
+        long bytesEncoded = Files.size(Path.of(encodedFilePath));
+        double compressionRate = ((bytesOriginal - bytesEncoded) /(double) bytesOriginal) * 100;
+        System.out.println("========================================");
+        System.out.println("Compression Rate: " + String.format("%.2f", compressionRate) + "% reduced");
+        System.out.println("========================================");
     }
 }

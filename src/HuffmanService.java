@@ -19,8 +19,9 @@ public class HuffmanService {
         BitSet bitSet = createBitSet(encodedString);
         FileHeader fileHeader = new FileHeader(encodedString.length(), root);
         writeEncodedToFile(bitSet, fileHeader, destinationFilePath);
-        fileUtils.printFileSize(sourceFilePath);
-        fileUtils.printFileSize(destinationFilePath);
+        fileUtils.printFileSize(sourceFilePath, FileType.ORIGINAL);
+        fileUtils.printFileSize(destinationFilePath, FileType.ENCODED);
+        fileUtils.getCompressionRate(sourceFilePath, destinationFilePath);
     }
 
     public void decode(String sourceFilePath, String destinationFilePath) throws IOException, ClassNotFoundException {
@@ -29,7 +30,7 @@ public class HuffmanService {
         FileHeader fileHeader = (FileHeader) list.get(1);
         String decodedString = createDecodedString(set, fileHeader);
         fileUtils.writeDecodedToFile(destinationFilePath, decodedString);
-        fileUtils.printFileSize(destinationFilePath);
+        fileUtils.printFileSize(destinationFilePath, FileType.DECODED);
     }
 
     private String createDecodedString(BitSet set, FileHeader fileHeader) {
