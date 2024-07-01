@@ -16,6 +16,7 @@ This project is to compress & decompress text files using Huffman Coding Greedy 
 ![Static Badge](https://img.shields.io/badge/Huffman_Coding-blue)
 ![Static Badge](https://img.shields.io/badge/Greedy_Algorithm-blue)
 ![Static Badge](https://img.shields.io/badge/Recursion-blue)
+![Static Badge](https://img.shields.io/badge/Iteration-blue)
 ![Static Badge](https://img.shields.io/badge/Binary_Tree-blue)
 ![Static Badge](https://img.shields.io/badge/Tree_Traversal-blue)
 ![Static Badge](https://img.shields.io/badge/Hash_Map-blue)
