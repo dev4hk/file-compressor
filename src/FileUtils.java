@@ -20,11 +20,23 @@ public class FileUtils {
         os.close();
     }
 
-    public List<Object> readFileToDecode(String sourceFilePath) throws IOException, ClassNotFoundException {
-        FileInputStream fis = new FileInputStream(sourceFilePath);
-        ObjectInputStream ois = new ObjectInputStream(fis);
-        Object bitSet = ois.readObject();
-        Object fileHeader = ois.readObject();
+    public List<Object> readFileToDecode(String sourceFilePath) throws IOException {
+        FileInputStream fis;
+        ObjectInputStream ois;
+        try {
+            fis = new FileInputStream(sourceFilePath);
+            ois = new ObjectInputStream(fis);
+        } catch (Exception e) {
+            throw new RuntimeException(AppEnum.NOT_ABLE_TO_DECODE.message);
+        }
+        Object bitSet;
+        Object fileHeader;
+        try {
+            bitSet = ois.readObject();
+            fileHeader = ois.readObject();
+        } catch (ClassNotFoundException e) {
+            throw new RuntimeException(AppEnum.NOT_ABLE_TO_DECODE.message);
+        }
         List<Object> list = new ArrayList<>();
         list.add(bitSet);
         list.add(fileHeader);

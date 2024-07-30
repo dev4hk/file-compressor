@@ -3,9 +3,18 @@ import java.io.IOException;
 public class Main {
 
     public static void main(String[] args) throws IOException, ClassNotFoundException {
+
+        ArgumentChecker.check(args);
+
         HuffmanService huffmanService = new HuffmanService();
-        huffmanService.encode("files/test.txt", "files/test-encoded.txt");
-        huffmanService.decode("files/test-encoded.txt", "files/test-decoded.txt");
-        FileUtils.areTheSameFiles("files/test.txt", "files/test-decoded.txt");
+
+        if (args[1].equals("-e")) {
+            huffmanService.encode(args[0], args[2]);
+        }
+        if (args[1].equals("-d")) {
+            huffmanService.decode(args[0], args[2]);
+        }
+
+//        FileUtils.areTheSameFiles("files/file.txt", "files/file-decoded.txt");
     }
 }
