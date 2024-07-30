@@ -9,6 +9,13 @@ This project is to compress & decompress text files using Huffman Coding Greedy 
 - The compressed file contains encoded contents of the original file & some metadata (i.e. Huffman Tree, length of encoded string) for decompression process
 - This application reduces ~47% size of the original text file
 
+## Used Data Structures & Algorithms
+- Hash Map
+- Min Heap
+- Bit Set
+- Binary Tree
+- Tree In-Order Traversal
+
 ## Project and Huffman Coding Algorithm Implementation
 - Encode Implementation
 1. Read a text file to encode
