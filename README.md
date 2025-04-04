@@ -1,89 +1,118 @@
 # Text File Compressor Using Huffman Coding Algorithm
 
-This project is to compress & decompress text files using Huffman Coding Greedy Algorithm
+This project demonstrates how to compress and decompress text files using the **Huffman Coding** greedy algorithm.
 
-## Features
+## 🚀 Features
 
-- This application decode & encode text contents using Huffman Coding
-- The Java console displays sizes of original, compressed, decompressed files, compression rate, and checks if the contents of the original file & the decompressed file are the same
-- The compressed file contains encoded contents of the original file & some metadata (i.e. Huffman Tree, length of encoded string) for decompression process
-- This application reduces ~47% size of the original text file
+- Compresses and decompresses text content using Huffman Coding.
+- Displays original, compressed, and decompressed file sizes along with the compression rate.
+- Verifies that the decompressed file matches the original.
+- Stores encoded content along with necessary metadata (e.g., Huffman Tree, encoded string length) for decompression.
+- Achieves an average compression rate of approximately **47%**.
 
-## Input Arguments
-- [source_text_file_path] [compression_option] [destination_text_file_path]
-- compression option
-  - -e: encode
-  - -d: decode
-- example: files/file.txt -e files/encoded_file.txt
+## 🛠️ Input Arguments
 
-## Used Data Structures, Algorithms and others
-- Hash Map
-- Min Heap
-- Bit Set
-- Binary Tree
-- Tree In-Order Traversal
-- Regular Expression
+```bash
+[source_text_file_path] [compression_option] [destination_text_file_path]
+```
 
-## Project and Huffman Coding Algorithm Implementation
-- Encode Implementation
-1. Read a text file to encode
-2. Create a hashmap and count the number of occurrences of each character in the file
-3. Instantiate a node from a class, which has a character and its frequency, left node and right node as a tree node, and push it into a min heap
-4. Repeat step #3 for all other characters from the hashmap
-5. Pop two objects from the heap (which has the least frequencies), create a new node and set this node as a parent of the two nodes
-6. Push the new parent node into the heap
-7. Repeat step #5 and #6 until the heap has only one node, which becomes a root of the tree
-8. Create another hashmap, which contains information about a character and encoded value, which will be a string representation of a binary number
-9. Perform inorder traversal from the root, and when travelling to left child, mark 0, otherwise, mark 1
-10. when reached to the leaf node, get the character of the leaf node, and put it into the encode hashmap with the binary string
-11. Repeat step #9 and #10 until all the leaf nodes are visited
-12. Encode a string representing binary numbers from the string from the original file
-13. Convert the encoded binary string to bitset
-14. Save the tree and the bitset to a new file
+### 🧩 Compression Options
 
-- Decode Implementation
-1. Read the tree object and the bitset from the encoded file
-2. Loop throw each bit in the bitset, and traver the tree with the value of the bit. For example, 0 -> left child, 1 -> right child
-3. when reached to the leaf node, add the character of the node to a string builder
-4. when all the bits are read, write the string from string builder to a file
+- `-e` : Encode (compress)
+- `-d` : Decode (decompress)
+- **Example**: `files/file.txt -e files/encoded_file.txt`
 
-- Example: if the original string is ABBCCC, then we can create a tree, such as:
+
+## 🧠 Data Structures, Algorithms, and Key Components
+
+- **Hash Map**: Used to store character frequencies and map each character to its corresponding frequency.
+- **Min Heap**: A priority queue used to build the Huffman Tree by always extracting the nodes with the lowest frequencies.
+- **Bit Set**: Utilized for efficient storage and manipulation of binary data, reducing memory usage.
+- **Binary Tree**: Forms the core structure of the Huffman Tree, where each node represents a character and its frequency.
+- **Tree In-Order Traversal**: Used to generate the Huffman codes by traversing the tree from left to right.
+- **Regular Expression**: Applied for parsing text content when necessary during the encoding/decoding processes.
+
+
+## 🔧 Huffman Coding Algorithm Implementation
+
+### 🔐 Encoding Process
+
+1. **Read the input text file**: Open the text file to encode.
+2. **Create a frequency map**: Build a `HashMap` to count the occurrences of each character in the file.
+3. **Build tree nodes**: Instantiate a node for each character, including its frequency, left child, and right child, and add these nodes to a min heap.
+4. **Process all characters**: Repeat step 3 for all characters present in the frequency map.
+5. **Build the Huffman tree**:
+    - Pop the two nodes with the lowest frequencies from the heap.
+    - Create a new parent node with these two nodes as children.
+    - Push the newly created parent node back into the heap.
+6. **Repeat the process**: Continue popping nodes and creating parent nodes until there is only one node remaining, which becomes the root of the Huffman tree.
+7. **Create encoding map**:
+    - Build another `HashMap` where each character is mapped to its Huffman code (a binary string).
+8. **Perform in-order traversal**:
+    - Traverse the tree from the root. Assign a binary `0` when moving left and a `1` when moving right.
+9. **Assign binary codes**: When reaching a leaf node, assign the corresponding binary string to the character.
+10. **Generate the encoded string**: Convert the original file's text into a binary string using the Huffman codes.
+11. **Store in BitSet**: Convert the binary string into a `BitSet` for efficient storage.
+12. **Save to file**: Save the Huffman tree and the BitSet to a new file for future decompression.
+
+### 🔓 Decoding Process
+
+1. **Read the encoded file**: Open the file containing the Huffman tree and the BitSet.
+2. **Process the BitSet**:
+    - Loop through each bit in the BitSet.
+    - Traverse the Huffman tree, moving left for `0` and right for `1`.
+3. **Reconstruct the original text**:
+    - When reaching a leaf node, add the character to a `StringBuilder`.
+4. **Write the decompressed text**: Once all bits are processed, output the decoded text to a new file.
+
+### 🌲 Example: Huffman Tree
+
+Consider the string `ABBCCC`. The corresponding Huffman tree might look like this:
 
 ![](screenshot/Huffman_Diagram.png)
 
-## Tech Used
 
-![Static Badge](https://img.shields.io/badge/Java-blue)
-![Static Badge](https://img.shields.io/badge/Huffman_Coding-blue)
-![Static Badge](https://img.shields.io/badge/Greedy_Algorithm-blue)
-![Static Badge](https://img.shields.io/badge/Recursion-blue)
-![Static Badge](https://img.shields.io/badge/Iteration-blue)
-![Static Badge](https://img.shields.io/badge/Binary_Tree-blue)
-![Static Badge](https://img.shields.io/badge/Tree_Traversal-blue)
-![Static Badge](https://img.shields.io/badge/Hash_Map-blue)
-![Static Badge](https://img.shields.io/badge/Min_Heap-blue)
-![Static Badge](https://img.shields.io/badge/Bit_Set-blue)
-![Static Badge](https://img.shields.io/badge/JAVA_IO-blue)
+## 🧰 Technologies Used
 
-## Screenshots
+- **Programming Language**: Java
+- **Algorithm**: Huffman Coding
+- **Algorithm Type**: Greedy Algorithm
+- **Approach**: Recursion, Iteration
+- **Data Structures**:
+    - Binary Tree
+    - Tree Traversal
+    - Hash Map
+    - Min Heap
+    - Bit Set
+- **Java I/O**: Java Input/Output (Java I/O)
 
-- Application Run
-  ![form](screenshot/img.png)
 
-## Challenges
 
-- In this project, Huffman Encoding generates binary String, which was actually larger than the content of original file
-- For example, when we get a Huffman code table during the encoding process as below: 
-  - Character | Huffman Code
-    ------------- | -------------
-    A  | 100
-    B  | 101
-    C  | 11
-    D  | 0
-- Then String ABBCCCDDDD is encoded to:
+## 🧪 Screenshots
+
+### ▶️ Application Run
+![Application Run Screenshot](screenshot/img.png)
+
+## ⚠️ Challenges
+
+- In this project, Huffman Encoding generates a binary string that can actually be larger than the content of the original file.
+
+- For example, consider the following Huffman code table generated during the encoding process:
+
+| Character | Huffman Code |
+|-----------|--------------|
+| A         | 100          |
+| B         | 101          |
+| C         | 11           |
+| D         | 0            |
+
+- If we encode the string `ABBCCCDDDD`, it results in the following binary string:
   - 1001011011111110000
-- And this result is larger than the original string ABBCCCDDDD
-- Even though this looks like a binary number, but it is still a string where each character is 2 bytes(= 16 bits)
-- To solve this issue, this application uses BitSet, which is a collection of boolean where each boolean is 1 bit, 
-- And it writes the BitSet object into a file using Java IO's ObjectOutputStream, which results in reduced size of the encoded contents of the original file 
-  
+
+- This result is actually larger than the original string `ABBCCCDDDD`.
+
+- Even though the result looks like a binary number, each character is still represented as a 2-byte (16-bit) value in the string format.
+
+### ✅ Solution
+
+To solve this issue, this application uses `BitSet`, which is a collection of boolean values where each boolean represents a single bit. This reduces the size of the encoded contents. The `BitSet` object is then written to a file using Java IO's `ObjectOutputStream`, which helps efficiently store the compressed data.
